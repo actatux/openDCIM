@@ -474,6 +474,7 @@ class Cabinet {
 		global $dbh;
 		// Store the value of frontedge before we muck with it
 		$ot=$this->FrontEdge;
+		$ot2=$this->U1Position;
 
 		// Make everything safe for us to search with
 		$this->MakeSafe();
@@ -483,6 +484,9 @@ class Cabinet {
 		foreach($this as $prop => $val){
 			// We force the following values to knowns in makesafe 
 			if($prop=="FrontEdge" && $val=="Top" && $ot!="Top"){
+				continue;
+			}
+			if($prop=="U1Position" && $val=="Default" && $ot2!="Default"){
 				continue;
 			}
 			if($val && $val!=date("Y-m-d", strtotime(0))){
