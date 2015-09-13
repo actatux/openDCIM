@@ -863,6 +863,41 @@ $app->get( '/manufacturer', function() use ($app) {
 	echoResponse(200,$response);
 });
 
+//
+//	URL:	/api/v1/search/:name
+//	Method:	GET
+//	Params:	name
+//	Returns:  Search objects by name. Lookup in device, cabinet and VMs
+//
+
+$app->get('/search/:name', function($name) use ($app) {
+	$dev=new Device();
+	$esx=new ESX();
+	$cab=new Cabinet();
+
+	$dev->Label=$name;
+	$devList=$dev->SearchDevicebyLabel();
+	//Virtual machines will never be search via asset tags or serial numbers
+	$esx->vmName=$dev->Label;
+	$vmList=$esx->SearchByVMName();
+	$cab->Location=$name;
+	$cabList=$cab->LooseSearch(true);
+	$resultcount=count($devList)+count($cabList)+count($vmList);
+
+	if(!$resultcount){
+		$response['error']=true;
+		$response['errorcode']=404;
+		$response['message']=__("No name found with pattern: ")." $name";
+	}else{
+		$response['error']=false;
+		$response['errorcode']=200;
+		$response['search']['device']=$devList;
+		$response['search']['cabinet']=$cabList;
+		$response['search']['vm']=$vmList;
+	}
+
+	echoResponse(200,$response);
+});
 
 
 
