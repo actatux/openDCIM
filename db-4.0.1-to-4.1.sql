@@ -16,4 +16,4 @@ INSERT INTO fac_Config SET Parameter='RCILow', Value='65', UnitOfMeasure='degree
 --
 -- Bump up the database version
 --
--- UPDATE fac_Config set Value='4.1' WHERE Parameter='Version';
+UPDATE fac_Config set Value='4.1' WHERE Parameter='Version';
